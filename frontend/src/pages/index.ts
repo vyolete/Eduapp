@@ -1,0 +1,8 @@
+export { Dashboard } from './Dashboard'
+export { Courses } from './Courses'
+export { Modules } from './Modules'
+export { Assessments } from './Assessments'
+export { Grades } from './Grades'
+export { Groups } from './Groups'
+export { default as Users } from './Users'
+export { default as Reports } from './Reports'
