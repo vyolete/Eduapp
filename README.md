@@ -86,11 +86,25 @@ Current implementation phase: **Phase 2 - Foundation Setup**
 - [x] Project structure created
 - [x] Dependencies installed
 - [x] Environment variables configured
-- [ ] Git branches for feature development
+- [x] Git branches for feature development
 - [ ] Authentication layer
 - [ ] API client layer
 
 See [tasks.md](.kiro/specs/architecture-documentation/tasks.md) for the complete implementation plan.
+
+## Git Workflow
+
+This project follows a feature-branch workflow with branches for each migration phase:
+
+- `main` - Production-ready code
+- `develop` - Integration branch for ongoing development
+- `feature/phase1-api-foundation` - REST API and backend integration
+- `feature/phase2-frontend-integration` - Frontend API integration and real-time updates
+- `feature/phase3-enhancements` - Advanced features and optimizations
+
+For detailed branching strategy and Git commands, see:
+- [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md) - Complete branching strategy and workflow
+- [GIT_QUICK_REFERENCE.md](GIT_QUICK_REFERENCE.md) - Quick reference for common Git commands
 
 ## Contributing
 
