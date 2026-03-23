@@ -1,115 +1,255 @@
-# EduApp ITM
+# EduApp ITM - Plataforma Educativa
 
-Educational platform for ITM (Institución Universitaria) supporting courses in Informática para la Gestión.
+Plataforma educativa para el curso "Informática para la Gestión" del ITM (Institución Universitaria).
 
-## Project Overview
+## 🎯 Características
 
-This repository contains the EduApp ITM platform, a React-based educational application with Supabase backend integration. The platform supports three user roles (admin, teacher, student) with different access levels and navigation flows.
+- ✅ Gestión de cursos, módulos y evaluaciones
+- ✅ Sistema de autenticación con roles (admin, teacher, student)
+- ✅ Dashboard con estadísticas en tiempo real
+- ✅ Seguimiento de progreso de estudiantes
+- ✅ Gestión de grupos y asignaciones
+- ✅ Módulos interactivos (VBA, Bases de Datos, ERP)
 
-## Repository Structure
+## 🛠️ Stack Tecnológico
+
+### Frontend
+- **React 18** - Framework UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool
+- **React Router** - Navegación
+- **Zustand** - State management
+- **Tailwind CSS** - Estilos
+
+### Backend
+- **Supabase** - Backend as a Service
+  - PostgreSQL database
+  - Authentication
+  - Row Level Security (RLS)
+  - Real-time subscriptions
+
+## 📋 Requisitos Previos
+
+- Node.js 18+ 
+- npm o yarn
+- Cuenta de Supabase (gratuita)
+
+## 🚀 Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/eduapp-itm.git
+cd eduapp-itm
+```
+
+### 2. Configurar Supabase
+
+1. Crea un proyecto en [Supabase](https://supabase.com)
+2. Ve a Settings → API y copia:
+   - Project URL
+   - anon/public key
+
+### 3. Configurar variables de entorno
+
+```bash
+cd frontend
+cp .env.example .env.local
+```
+
+Edita `frontend/.env.local` con tus credenciales:
+
+```env
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=tu-anon-key-aqui
+VITE_API_BASE_URL=https://tu-proyecto.supabase.co
+VITE_APP_NAME="EduApp ITM"
+VITE_APP_URL=http://localhost:5173
+```
+
+### 4. Crear el schema de base de datos
+
+1. Ve a Supabase Dashboard → SQL Editor
+2. Copia el contenido de `supabase-setup.sql`
+3. Pega y ejecuta
+
+Esto creará:
+- Todas las tablas con relaciones
+- RLS policies para seguridad
+- Datos iniciales de ejemplo
+
+### 5. Crear usuario administrador
+
+En Supabase Dashboard → Authentication → Users:
+
+1. Click "Add User"
+2. Email: `admin@itm.edu.co`
+3. Password: `admin123`
+4. User Metadata:
+   ```json
+   {
+     "role": "admin",
+     "name": "Administrador ITM"
+   }
+   ```
+5. Copia el UUID del usuario creado
+6. En SQL Editor, ejecuta:
+   ```sql
+   INSERT INTO usuarios (id, email, nombre, rol, activo)
+   VALUES (
+     'UUID-DEL-USUARIO',
+     'admin@itm.edu.co',
+     'Administrador ITM',
+     'admin',
+     true
+   );
+   ```
+
+### 6. Instalar dependencias y ejecutar
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Abre http://localhost:5173
+
+**Login:**
+- Email: `admin@itm.edu.co`
+- Password: `admin123`
+
+## 📁 Estructura del Proyecto
 
 ```
-.
-├── frontend/              # React application (To-Be architecture)
-├── eduplatform (1).tsx    # Original monolithic component (As-Is)
-├── macros-module.tsx      # Interactive Macros module
-├── vba-lesson.tsx         # VBA tutorial component
-├── supabase-setup.sql     # Database schema and setup
-└── .kiro/specs/           # Architecture documentation
+eduapp-itm/
+├── frontend/                 # Aplicación React
+│   ├── src/
+│   │   ├── components/      # Componentes reutilizables
+│   │   │   ├── layout/      # Header, Sidebar, Footer
+│   │   │   ├── ui/          # Button, Card, Input, etc.
+│   │   │   └── modules/     # Componentes específicos
+│   │   ├── pages/           # Páginas de la aplicación
+│   │   ├── lib/
+│   │   │   ├── api/         # Funciones API de Supabase
+│   │   │   ├── types/       # TypeScript interfaces
+│   │   │   └── utils/       # Utilidades
+│   │   ├── store/           # Zustand stores
+│   │   ├── contexts/        # React contexts
+│   │   └── hooks/           # Custom hooks
+│   ├── .env.example         # Plantilla de variables de entorno
+│   └── package.json
+├── supabase-setup.sql       # Script de base de datos
+├── .gitignore
+└── README.md
 ```
 
-## Quick Start
+## 🔐 Roles y Permisos
 
-### Frontend Application (Recommended)
+### Admin
+- Gestión completa de usuarios
+- Crear/editar cursos y módulos
+- Ver reportes y estadísticas
+- Gestionar grupos
 
-The new modular frontend is located in the `frontend/` directory:
+### Teacher
+- Ver y editar módulos
+- Gestionar evaluaciones
+- Calificar estudiantes
+- Ver grupos asignados
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+### Student
+- Ver contenido de cursos
+- Realizar evaluaciones
+- Ver sus calificaciones
+- Seguir su progreso
 
-2. Set up environment variables:
-   ```bash
-   cp .env.example .env.local
-   ```
+## 🗄️ Modelo de Datos
 
-3. Configure your Supabase credentials in `.env.local`:
-   - `VITE_SUPABASE_URL`: Your Supabase project URL
-   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+### Tablas Principales
 
-4. Install dependencies and start:
-   ```bash
-   npm install
-   npm run dev
-   ```
+- `usuarios` - Usuarios del sistema
+- `semestres` - Períodos académicos
+- `cursos` - Cursos disponibles
+- `modulos` - Módulos de cada curso
+- `temas` - Contenido de los módulos
+- `evaluaciones` - Evaluaciones y talleres
+- `notas` - Calificaciones de estudiantes
+- `grupos` - Grupos de estudiantes
+- `grupo_estudiantes` - Relación estudiantes-grupos
+- `progreso_temas` - Seguimiento de progreso
+- `materiales` - Archivos y recursos
+- `entregas` - Entregas de trabajos
 
-See [frontend/README.md](frontend/README.md) for detailed setup instructions.
+## 🚀 Despliegue en Vercel
 
-### Database Setup
+### 1. Preparar el proyecto
 
-1. Create a Supabase project at [supabase.com](https://supabase.com)
-2. Run the SQL schema from `supabase-setup.sql` in your Supabase SQL editor
-3. Configure Row Level Security (RLS) policies as needed
+```bash
+cd frontend
+npm run build
+```
 
-## Architecture
+### 2. Desplegar
 
-This project is transitioning from a monolithic architecture (As-Is) to a modular architecture (To-Be):
+**Opción A: Desde GitHub**
 
-- **As-Is**: Single-file React components with hardcoded data
-- **To-Be**: Modular React app with Supabase integration, proper state management, and API layer
+1. Push a GitHub
+2. Conecta el repositorio en [Vercel](https://vercel.com)
+3. Configura:
+   - Root Directory: `frontend`
+   - Framework: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
 
-For detailed architecture documentation, see:
-- [Requirements Document](.kiro/specs/architecture-documentation/requirements.md)
-- [Design Document](.kiro/specs/architecture-documentation/design.md)
-- [Implementation Tasks](.kiro/specs/architecture-documentation/tasks.md)
+**Opción B: Desde CLI**
 
-## Technology Stack
+```bash
+npm install -g vercel
+cd frontend
+vercel
+```
 
-- **Frontend**: React 18+, TypeScript, Vite, Tailwind CSS
-- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
-- **State Management**: Zustand
-- **Testing**: Vitest, React Testing Library
+### 3. Configurar variables de entorno en Vercel
 
-## User Roles
+En Settings → Environment Variables, agrega:
 
-| Role | Access Level | Features |
-|------|-------------|----------|
-| **Admin** | Full system access | Dashboard, Courses, Modules, Groups, Users, Reports |
-| **Teacher** | Course management | Dashboard, Modules, Assessments, Groups |
-| **Student** | Learning content | My Course, Modules, Assessments, Grades |
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_API_BASE_URL`
+- `VITE_APP_NAME`
+- `VITE_APP_URL` (tu URL de Vercel)
 
-## Development Status
+## 📚 Documentación Adicional
 
-Current implementation phase: **Phase 2 - Foundation Setup**
+- `frontend/README.md` - Documentación específica del frontend
+- `frontend/ENV_VARIABLES.md` - Guía de variables de entorno
+- `BRANCHING_STRATEGY.md` - Estrategia de branches de Git
 
-- [x] Project structure created
-- [x] Dependencies installed
-- [x] Environment variables configured
-- [x] Git branches for feature development
-- [ ] Authentication layer
-- [ ] API client layer
+## 🤝 Contribuir
 
-See [tasks.md](.kiro/specs/architecture-documentation/tasks.md) for the complete implementation plan.
+Si eres docente y quieres usar o mejorar esta plataforma:
 
-## Git Workflow
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
 
-This project follows a feature-branch workflow with branches for each migration phase:
+## 📝 Licencia
 
-- `main` - Production-ready code
-- `develop` - Integration branch for ongoing development
-- `feature/phase1-api-foundation` - REST API and backend integration
-- `feature/phase2-frontend-integration` - Frontend API integration and real-time updates
-- `feature/phase3-enhancements` - Advanced features and optimizations
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
-For detailed branching strategy and Git commands, see:
-- [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md) - Complete branching strategy and workflow
-- [GIT_QUICK_REFERENCE.md](GIT_QUICK_REFERENCE.md) - Quick reference for common Git commands
+## 👥 Autores
 
-## Contributing
+- **ITM** - Institución Universitaria
+- **Curso:** Informática para la Gestión
+- **Programa:** Tecnología en Análisis de Costos y Presupuestos
 
-This is an educational project for ITM. For questions or contributions, please refer to the architecture documentation in `.kiro/specs/architecture-documentation/`.
+## 📧 Contacto
 
-## License
+Para preguntas o soporte, contacta a: [correo@itm.edu.co]
 
-Educational use for ITM (Institución Universitaria).
+---
+
+**Nota:** Este es un proyecto educativo. Las credenciales de ejemplo deben cambiarse en producción.

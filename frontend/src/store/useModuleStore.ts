@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Module } from '../lib/types/module'
+import { modulesApi } from '../lib/api'
 
 interface ModuleState {
   modules: Module[]
@@ -10,7 +11,7 @@ interface ModuleState {
   // Actions
   fetchModules: (courseId?: string) => Promise<void>
   fetchModuleById: (id: string) => Promise<void>
-  createModule: (module: Module) => Promise<void>
+  createModule: (module: Partial<Module>) => Promise<void>
   updateModule: (id: string, module: Partial<Module>) => Promise<void>
   deleteModule: (id: string) => Promise<void>
   setActiveModule: (module: Module | null) => void
@@ -23,12 +24,17 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
   error: null,
   
   fetchModules: async (courseId) => {
+    if (!courseId) {
+      set({ modules: [], isLoading: false })
+      return
+    }
+    
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.get<Module[]>(`/modules${courseId ? `?course_id=${courseId}` : ''}`)
-      // set({ modules: response.data || [], isLoading: false })
+      const modules = await modulesApi.getByCourse(courseId)
+      set({ modules, isLoading: false })
     } catch (error) {
+      console.error('Failed to fetch modules:', error)
       set({ error: 'Failed to fetch modules', isLoading: false })
     }
   },
@@ -36,10 +42,10 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
   fetchModuleById: async (id: string) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.get<Module>(`/modules/${id}`)
-      // set({ activeModule: response.data || null, isLoading: false })
+      const module = await modulesApi.getById(id)
+      set({ activeModule: module, isLoading: false })
     } catch (error) {
+      console.error('Failed to fetch module:', error)
       set({ error: 'Failed to fetch module', isLoading: false })
     }
   },
@@ -47,41 +53,44 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
   createModule: async (module) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.post<Module>('/modules', module)
-      // set({ modules: [...get().modules, response.data!], isLoading: false })
+      const newModule = await modulesApi.create(module)
+      set({ modules: [...get().modules, newModule], isLoading: false })
     } catch (error) {
+      console.error('Failed to create module:', error)
       set({ error: 'Failed to create module', isLoading: false })
+      throw error
     }
   },
   
   updateModule: async (id, module) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.put<Module>(`/modules/${id}`, module)
-      // set({ 
-      //   modules: get().modules.map(m => m.id === id ? response.data! : m),
-      //   activeModule: get().activeModule?.id === id ? response.data! : get().activeModule,
-      //   isLoading: false 
-      // })
+      const updatedModule = await modulesApi.update(id, module)
+      set({ 
+        modules: get().modules.map(m => m.id === id ? updatedModule : m),
+        activeModule: get().activeModule?.id === id ? updatedModule : get().activeModule,
+        isLoading: false 
+      })
     } catch (error) {
+      console.error('Failed to update module:', error)
       set({ error: 'Failed to update module', isLoading: false })
+      throw error
     }
   },
   
   deleteModule: async (id) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // await apiClient.delete(`/modules/${id}`)
-      // set({ 
-      //   modules: get().modules.filter(m => m.id !== id),
-      //   activeModule: get().activeModule?.id === id ? null : get().activeModule,
-      //   isLoading: false 
-      // })
+      await modulesApi.delete(id)
+      set({ 
+        modules: get().modules.filter(m => m.id !== id),
+        activeModule: get().activeModule?.id === id ? null : get().activeModule,
+        isLoading: false 
+      })
     } catch (error) {
+      console.error('Failed to delete module:', error)
       set({ error: 'Failed to delete module', isLoading: false })
+      throw error
     }
   },
   

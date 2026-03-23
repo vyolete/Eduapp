@@ -2,10 +2,11 @@
 node_modules/
 frontend/node_modules/
 
-# Environment variables
+# Environment variables (NUNCA subir credenciales)
 .env
 .env.local
 .env.*.local
+frontend/.env.local
 
 # Build outputs
 dist/
@@ -37,3 +38,24 @@ coverage/
 # Temporary files
 *.tmp
 .cache/
+
+# Documentación interna de desarrollo (no compartir)
+DEPLOYMENT_STATUS.md
+INTEGRATION_COMPLETE.md
+NEXT_STEPS.md
+EXECUTE_SQL_INSTRUCTIONS.md
+insert-data-only.sql
+frontend/ENV_STATUS.md
+frontend/GET_SUPABASE_KEYS.md
+frontend/CONNECTION_SUCCESS.md
+frontend/verify-env.js
+frontend/test-connection.js
+frontend/insert-initial-data.js
+
+# Specs de Kiro (desarrollo interno)
+.kiro/specs/
+
+# Archivos de desarrollo temporal
+eduplatform (1).tsx
+macros-module.tsx
+vba-lesson.tsx

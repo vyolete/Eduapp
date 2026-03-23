@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Assessment } from '../lib/types/assessment'
+import { assessmentsApi } from '../lib/api'
 
 interface AssessmentState {
   assessments: Assessment[]
@@ -10,7 +11,7 @@ interface AssessmentState {
   // Actions
   fetchAssessments: (courseId?: string) => Promise<void>
   fetchAssessmentById: (id: string) => Promise<void>
-  createAssessment: (assessment: Assessment) => Promise<void>
+  createAssessment: (assessment: Partial<Assessment>) => Promise<void>
   updateAssessment: (id: string, assessment: Partial<Assessment>) => Promise<void>
   deleteAssessment: (id: string) => Promise<void>
   setActiveAssessment: (assessment: Assessment | null) => void
@@ -23,12 +24,17 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   error: null,
   
   fetchAssessments: async (courseId) => {
+    if (!courseId) {
+      set({ assessments: [], isLoading: false })
+      return
+    }
+    
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.get<Assessment[]>(`/assessments${courseId ? `?course_id=${courseId}` : ''}`)
-      // set({ assessments: response.data || [], isLoading: false })
+      const assessments = await assessmentsApi.getByCourse(courseId)
+      set({ assessments, isLoading: false })
     } catch (error) {
+      console.error('Failed to fetch assessments:', error)
       set({ error: 'Failed to fetch assessments', isLoading: false })
     }
   },
@@ -36,10 +42,10 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   fetchAssessmentById: async (id: string) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.get<Assessment>(`/assessments/${id}`)
-      // set({ activeAssessment: response.data || null, isLoading: false })
+      const assessment = await assessmentsApi.getById(id)
+      set({ activeAssessment: assessment, isLoading: false })
     } catch (error) {
+      console.error('Failed to fetch assessment:', error)
       set({ error: 'Failed to fetch assessment', isLoading: false })
     }
   },
@@ -47,41 +53,44 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   createAssessment: async (assessment) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.post<Assessment>('/assessments', assessment)
-      // set({ assessments: [...get().assessments, response.data!], isLoading: false })
+      const newAssessment = await assessmentsApi.create(assessment)
+      set({ assessments: [...get().assessments, newAssessment], isLoading: false })
     } catch (error) {
+      console.error('Failed to create assessment:', error)
       set({ error: 'Failed to create assessment', isLoading: false })
+      throw error
     }
   },
   
   updateAssessment: async (id, assessment) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // const response = await apiClient.put<Assessment>(`/assessments/${id}`, assessment)
-      // set({ 
-      //   assessments: get().assessments.map(a => a.id === id ? response.data! : a),
-      //   activeAssessment: get().activeAssessment?.id === id ? response.data! : get().activeAssessment,
-      //   isLoading: false 
-      // })
+      const updatedAssessment = await assessmentsApi.update(id, assessment)
+      set({ 
+        assessments: get().assessments.map(a => a.id === id ? updatedAssessment : a),
+        activeAssessment: get().activeAssessment?.id === id ? updatedAssessment : get().activeAssessment,
+        isLoading: false 
+      })
     } catch (error) {
+      console.error('Failed to update assessment:', error)
       set({ error: 'Failed to update assessment', isLoading: false })
+      throw error
     }
   },
   
   deleteAssessment: async (id) => {
     set({ isLoading: true, error: null })
     try {
-      // TODO: Implement API call
-      // await apiClient.delete(`/assessments/${id}`)
-      // set({ 
-      //   assessments: get().assessments.filter(a => a.id !== id),
-      //   activeAssessment: get().activeAssessment?.id === id ? null : get().activeAssessment,
-      //   isLoading: false 
-      // })
+      await assessmentsApi.delete(id)
+      set({ 
+        assessments: get().assessments.filter(a => a.id !== id),
+        activeAssessment: get().activeAssessment?.id === id ? null : get().activeAssessment,
+        isLoading: false 
+      })
     } catch (error) {
+      console.error('Failed to delete assessment:', error)
       set({ error: 'Failed to delete assessment', isLoading: false })
+      throw error
     }
   },
   
