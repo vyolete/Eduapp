@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 import { Login } from './components'
 import { Dashboard, Courses, Modules, Assessments, Grades, Groups } from './pages'
 import { ProtectedRoute } from './components/ProtectedRoute'
