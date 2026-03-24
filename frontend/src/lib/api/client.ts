@@ -101,18 +101,19 @@ class HttpClient implements APIClient {
     }
   }
 
-  private handleError(error: AxiosError): APIResponse<never> {
-    if (error.response) {
+  private handleError(error: unknown): APIResponse<never> {
+    const axiosError = error as AxiosError<any>
+    if (axiosError.response) {
       return {
         data: null,
         error: {
-          message: error.response.data?.message || 'An error occurred',
-          code: error.response.data?.code || 'UNKNOWN_ERROR',
-          details: error.response.data?.details,
+          message: axiosError.response.data?.message || 'An error occurred',
+          code: axiosError.response.data?.code || 'UNKNOWN_ERROR',
+          details: axiosError.response.data?.details,
         },
-        status: error.response.status,
+        status: axiosError.response.status,
       }
-    } else if (error.request) {
+    } else if (axiosError.request) {
       return {
         data: null,
         error: {
@@ -125,7 +126,7 @@ class HttpClient implements APIClient {
       return {
         data: null,
         error: {
-          message: error.message || 'An error occurred',
+          message: axiosError.message || 'An error occurred',
           code: 'REQUEST_ERROR',
         },
         status: 0,

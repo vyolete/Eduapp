@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { useCourseStore } from '../store'
 
 export function Courses() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const { courses, isLoading, error, fetchCourses } = useCourseStore()
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function Courses() {
             <h1 className="text-3xl font-bold text-white">Courses</h1>
             <p className="text-gray-400">Manage your courses and programs</p>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>
+          <Button>
             <Plus className="mr-2 h-4 w-4" />
             Add Course
           </Button>

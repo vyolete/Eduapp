@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 export function Dashboard() {
   const { user } = useAuth()
   const { fetchCourses, courses, isLoading: coursesLoading } = useCourseStore()
-  const { modules } = useModuleStore()
+
 
   useEffect(() => {
     fetchCourses()

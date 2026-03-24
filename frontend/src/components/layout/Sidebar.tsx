@@ -7,7 +7,6 @@ import {
   CheckSquare, 
   Award, 
   Users,
-  FileText,
   Menu,
   X
 } from 'lucide-react'

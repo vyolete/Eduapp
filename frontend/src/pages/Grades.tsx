@@ -1,5 +1,4 @@
 import { Layout } from '../components/layout'
-import { useState } from 'react'
 
 export function Grades() {
   return (

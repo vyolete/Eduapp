@@ -1,5 +1,4 @@
 import { cn } from '../../lib/utils'
-import { forwardRef } from 'react'
 
 interface LoadingProps {
   message?: string

@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export function Modules() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+
 
   return (
     <Layout>
@@ -14,7 +14,7 @@ export function Modules() {
             <h1 className="text-3xl font-bold text-white">Modules</h1>
             <p className="text-gray-400">Manage course modules and content</p>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>
+          <Button>
             <Plus className="mr-2 h-4 w-4" />
             Add Module
           </Button>
