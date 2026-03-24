@@ -1,7 +1,7 @@
 import { Layout } from '../components/layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Loading } from '../components/ui'
 import { useAuth } from '../contexts/AuthContext'
-import { useCourseStore, useModuleStore } from '../store'
+import { useCourseStore } from '../store'
 import { useEffect } from 'react'
 
 export function Dashboard() {

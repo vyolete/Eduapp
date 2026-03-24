@@ -1,7 +1,7 @@
 import { Layout } from '../components/layout'
 import { Button, Card, Loading } from '../components/ui'
 import { Plus } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useCourseStore } from '../store'
 
 export function Courses() {
