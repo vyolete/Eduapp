@@ -4,11 +4,10 @@
 import { useAuthStore } from '../store/useAuthStore';
 
 export function useAuth() {
-  const { user, session, isLoading } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   
   return {
     user,
-    session,
     isLoading,
   };
 }
